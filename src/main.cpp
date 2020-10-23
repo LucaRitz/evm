@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 
         LaplacePyramid pyr(frame, 4);
 
-        LaplacePyramid amplified = (pyr * filter * vector<double>{50, 50, 50, 1}).norm(255);
+        LaplacePyramid amplified = (pyr * filter * vector<double>{100, 50, 50, 1}).norm(pyr);
 
         LaplacePyramid sum = pyr + amplified;
 
@@ -44,7 +44,10 @@ int main(int argc, char** argv) {
             cv::waitKey(0);
         }*/
 
-        frame = sum.reconstruct();
+        Mat val = amplified.norm(pyr).at(0);
+        cv::resize(val, val, cv::Size(frame.cols,frame.rows), 0, 0, cv::INTER_LINEAR);
+        frame += val;
+        //frame = val;
         frame.convertTo(frame, CV_8UC3);
 
         cv::imshow("Video", frame);

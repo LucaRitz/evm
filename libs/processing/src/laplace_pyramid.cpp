@@ -62,12 +62,13 @@ t_level proc::LaplacePyramid::levels() {
    return _pyramid.size();
 }
 
-proc::LaplacePyramid proc::LaplacePyramid::norm(int max) {
+proc::LaplacePyramid proc::LaplacePyramid::norm(const LaplacePyramid& pyramid) {
     LaplacePyramid result;
     for (int i = 0; i < levels(); i++) {
-        double min, currentMax;
+        double min, currentMax, otherMax;
         cv::minMaxLoc(_pyramid.at(i), &min, &currentMax);
-        double factor = currentMax / max;
+        cv::minMaxLoc(pyramid._pyramid.at(i), &min, &otherMax);
+        double factor = currentMax / otherMax;
         result._pyramid.push_back(_pyramid.at(i) / factor);
     }
     return result;

@@ -23,7 +23,7 @@ namespace proc {
         Mat at(t_level level);
         t_level levels();
 
-        LaplacePyramid norm(int max);
+        LaplacePyramid norm(const LaplacePyramid& pyramid);
         LaplacePyramid operator+(const LaplacePyramid& other);
         LaplacePyramid operator*(const vector<double>& factor);
         LaplacePyramid operator*(Filter& filter);
