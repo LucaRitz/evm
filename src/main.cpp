@@ -3,21 +3,33 @@
 #include <processing/laplace_pyramid.hpp>
 #include <processing/filter.hpp>
 #include <opencv2/opencv.hpp>
+#include <processing/queue_worker.hpp>
 
 using proc::LaplacePyramid;
+using proc::QueueWorker;
 using proc::Filter;
 
 int main(int argc, char** argv) {
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("resources/test.mp4");
+    cv::VideoCapture cap("resources/test_2.mp4");
+    //QueueWorker worker;
 
     // Check if camera opened successfully
     if(!cap.isOpened()){
         return -1;
     }
 
-    Filter filter{0.4, 2};
+   /* cv::VideoCapture cap;
+
+    if(!cap.open(0)) {
+        return -1;
+    }*/
+
+    vector<LaplacePyramid> pyramids;
+    Filter filter{0.833, 1.0f, 30};
+    Mat allFrames;
+    vector<Mat> frames;
 
     while(true){
 
@@ -26,34 +38,43 @@ int main(int argc, char** argv) {
         cap >> frame;
         frame.convertTo(frame, CV_32FC3);
 
+        frames.push_back(frame);
+
         // If the frame is empty, break immediately
         if (frame.empty())
             break;
-
         LaplacePyramid pyr(frame, 4);
+        Mat singleFrame = pyr.at(0);
+        singleFrame = singleFrame.reshape(singleFrame.channels(), singleFrame.cols*singleFrame.rows).clone();
+        if(allFrames.cols == 0) {
+            singleFrame.copyTo(allFrames);
+        } else {
+            hconcat(allFrames,singleFrame,allFrames);
+        }
 
-        LaplacePyramid amplified = (pyr * filter * vector<double>{100, 50, 50, 1}).norm(pyr);
+        if (allFrames.cols == 120) {
+            Mat amplified = (filter * allFrames * 100);
 
-        LaplacePyramid sum = pyr + amplified;
+            for(int i = 0; i < allFrames.cols; i++) {
+                frame = frames.at(i);
+                Mat line = amplified.col(i).clone();
+                line = line.reshape(line.channels(), pyr.at(0).size().height).clone();
 
-        /*for (int i = 0; i < pyr.levels(); i++) {
-            frame = pyr.at(i);
-            frame.convertTo(frame, CV_8UC3);
+                cv::resize(line, line, frame.size(), 0, 0, cv::INTER_LINEAR);
+                Mat sum = frame + line;
 
-            cv::imshow("Video", frame);
-            cv::waitKey(0);
-        }*/
+                double min,max;
+                minMaxLoc(sum, &min, &max);
+                sum.convertTo(sum, CV_8UC3, 255.0/(max-min), -min * 255.0/(max-min));
 
-        Mat val = amplified.norm(pyr).at(0);
-        cv::resize(val, val, cv::Size(frame.cols,frame.rows), 0, 0, cv::INTER_LINEAR);
-        frame += val;
-        //frame = val;
-        frame.convertTo(frame, CV_8UC3);
-
-        cv::imshow("Video", frame);
-        cv::waitKey(1);
+                std::cout << "Display: " << std::endl;
+                cv::imshow("Video", sum);
+                cv::waitKey(33);
+            }
+            allFrames = Mat();
+            frames.clear();
+        }
     }
-
     // When everything done, release the video capture object
     cap.release();
 

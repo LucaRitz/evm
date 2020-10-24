@@ -1,11 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <opencv2/opencv.hpp>
 #include "macro_definition.hpp"
-
-namespace cv {
-    class Mat;
-}
 
 using t_level = unsigned short;
 using std::vector;

@@ -35,7 +35,7 @@ namespace proc {
 
     class EXPORT Filter {
     public:
-        Filter(double lowerBound, double upperBound);
+        Filter(double lowerBound, double upperBound, int sampleRate);
 
         Mat operator*(Mat toFilter);
 
@@ -43,11 +43,12 @@ namespace proc {
         Filters _filter;
         double _lowerBound;
         double _upperBound;
+        int _sampleRate;
 
         Mat findAndCreateFilterIfNotExist(const Mat& toFilter);
 
         static vector<Mat> splitByChannel(const Mat& src);
         static Mat mergeChannels(const vector<Mat>& mats);
-        static Mat buildFilterOfFrequencyBand(int width, int height, double lowerBound, double upperBound);
+        static Mat buildFilterOfFrequencyBand(Mat& filter, double lowerBound, double upperBound, int sampleRate);
     };
 }
