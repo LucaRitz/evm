@@ -1,1 +1,2 @@
 add_subdirectory(processing)
+add_subdirectory(evm)

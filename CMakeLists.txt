@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(evm)
+project(evm_exe)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
@@ -24,7 +24,7 @@ file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
 add_subdirectory(libs)
 add_subdirectory(src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE processing ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE evm ${OpenCV_LIBS})
 
 configure_file(${CMAKE_SOURCE_DIR}/cmake/copy_libraries.cmake ${CMAKE_BINARY_DIR}/copy_libraries_gen.cmake @ONLY)
 

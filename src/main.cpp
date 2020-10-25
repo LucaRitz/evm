@@ -1,5 +1,42 @@
 
 #include <iostream>
+#include <evm/capturing_pipeline.hpp>
+#include <evm/impl/webcam_capture.hpp>
+#include <evm/impl/roi_default.hpp>
+#include <evm/processor.hpp>
+#include <evm/evm_pipeline.hpp>
+#include <evm/display.hpp>
+#include <evm/filter/laplace_spatial_filter.hpp>
+#include <evm/filter/ideal_bandpass_temporal_filter.hpp>
+#include <evm/filter/amplifier.hpp>
+#include <evm/filter/reconstructor.hpp>
+#include <windows.h>
+
+int main() {
+    evm::LaplaceSpatialFilter spatialFilter(4);
+    evm::IdealBandpassTemporalFilter temporalFilter(0.833, 1, 30);
+    evm::Amplifier amplifier{std::vector<int>{100, 1, 1, 1}};
+    evm::Reconstructor reconstructor;
+    evm::EvmPipeline evmPipeline(&spatialFilter, &temporalFilter, &amplifier, &reconstructor);
+
+    evm::WebcamCapture videoCapture;
+    evm::RoiDefault roiCapture;
+    evm::Display display(30);
+    evm::Processor processor(evmPipeline, display, 60);
+    evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);
+
+
+    while(true) {
+
+    }
+    capturingPipeline.stop();
+    evmPipeline.stop();
+    display.stop();
+
+    return 0;
+}
+
+/*
 #include <processing/laplace_pyramid.hpp>
 #include <processing/filter.hpp>
 #include <opencv2/opencv.hpp>
@@ -20,11 +57,13 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-   /* cv::VideoCapture cap;
+   */
+/* cv::VideoCapture cap;
 
     if(!cap.open(0)) {
         return -1;
-    }*/
+    }*//*
+
 
     vector<LaplacePyramid> pyramids;
     Filter filter{0.833, 1.0f, 30};
@@ -79,4 +118,4 @@ int main(int argc, char** argv) {
     cap.release();
 
     return 0;
-}
+}*/
