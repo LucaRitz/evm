@@ -12,6 +12,6 @@ namespace evm {
 
     class EXPORT Reconstructor {
     public:
-        vector<Mat> operator()(vector<Mat> originals, const vector<shared_ptr<Pyramid>>& amplified);
+        virtual vector<Mat> operator()(vector<Mat> originals, const vector<shared_ptr<Pyramid>>& amplified);
     };
 }

@@ -5,6 +5,7 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${EVM_INCLUDE_DIR}/filter/ideal_bandpass_temporal_filter.hpp
         ${EVM_INCLUDE_DIR}/filter/amplifier.hpp
         ${EVM_INCLUDE_DIR}/filter/reconstructor.hpp
+        ${EVM_INCLUDE_DIR}/filter/level_reconstructor.hpp
 
         PRIVATE
         laplace_pyramid.hpp
@@ -13,4 +14,5 @@ target_sources(${PROJECT_NAME} PUBLIC
         ideal_bandpass_temporal_filter.cpp
         amplifier.cpp
         reconstructor.cpp
+        level_reconstructor.cpp
         )

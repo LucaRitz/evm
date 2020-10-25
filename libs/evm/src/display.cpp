@@ -24,7 +24,9 @@ void evm::Display::work(atomic<bool>& running, queue<future<evm::OutputData>>& q
             auto frames = data.get()._processed_rois;
             for(auto& frame : frames) {
                 Mat converted;
-                frame.convertTo(converted, CV_8UC3);
+                double min,max;
+                minMaxLoc(frame, &min, &max);
+                frame.convertTo(converted, CV_8UC3, 255.0/(max-min), -min * 255.0/(max-min));
                 cv::imshow("Output", converted);
                 cv::waitKey(1000/framesPerSec);
             }

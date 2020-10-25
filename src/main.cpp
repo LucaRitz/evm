@@ -2,6 +2,7 @@
 #include <iostream>
 #include <evm/capturing_pipeline.hpp>
 #include <evm/impl/webcam_capture.hpp>
+#include <evm/impl/video_capture.hpp>
 #include <evm/impl/roi_default.hpp>
 #include <evm/processor.hpp>
 #include <evm/evm_pipeline.hpp>
@@ -10,18 +11,20 @@
 #include <evm/filter/ideal_bandpass_temporal_filter.hpp>
 #include <evm/filter/amplifier.hpp>
 #include <evm/filter/reconstructor.hpp>
-#include <windows.h>
+#include <evm/filter/level_reconstructor.hpp>
 
 int main() {
     evm::LaplaceSpatialFilter spatialFilter(4);
     evm::IdealBandpassTemporalFilter temporalFilter(0.833, 1, 30);
     evm::Amplifier amplifier{std::vector<int>{100, 1, 1, 1}};
-    evm::Reconstructor reconstructor;
+    //evm::Reconstructor reconstructor;
+    evm::LevelReconstructor reconstructor{0};
     evm::EvmPipeline evmPipeline(&spatialFilter, &temporalFilter, &amplifier, &reconstructor);
 
-    evm::WebcamCapture videoCapture;
+    //evm::WebcamCapture videoCapture;
+    evm::VideoCapture videoCapture{"resources/test_2.mp4"};
     evm::RoiDefault roiCapture;
-    evm::Display display(30);
+    evm::Display display(30); // TODO: Add roi inverter
     evm::Processor processor(evmPipeline, display, 60);
     evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);
 
