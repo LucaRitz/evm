@@ -23,14 +23,14 @@ Mat evm::Pyramid::reconstruct() const {
 }
 
 evm::Pyramid evm::Pyramid::operator*(const vector<int>& factors) const {
-    if (_levels.size() != factors.size()) {
-        return Pyramid{};
-    }
-
     Pyramid result;
 
     for(int i = 0; i < _levels.size(); i++) {
-        result.push_back(_levels.at(i) * factors.at(i));
+        Mat mat = _levels.at(i);
+        if (factors.size() > i) {
+            mat *= factors.at(i);
+        }
+        result.push_back(mat);
     }
 
     return result;
