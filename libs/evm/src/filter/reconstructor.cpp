@@ -1,10 +1,11 @@
 #include "../../include/evm/filter/reconstructor.hpp"
 
-vector<Mat> evm::Reconstructor::operator()(vector<Mat> originals, const vector<shared_ptr<Pyramid>>& amplified) {
-    vector<Mat> results;
+vector<evm::Roi> evm::Reconstructor::operator()(const vector<Roi>& originals, const vector<shared_ptr<Pyramid>>& amplified) const {
+    vector<Roi> results;
 
     for (int i = 0; i < originals.size(); i++) {
-        results.emplace_back(originals.at(i) + amplified.at(i)->reconstruct());
+        Mat result = originals.at(i)._roi + amplified.at(i)->reconstruct();
+        results.emplace_back(Roi{result, originals.at(i)._position});
     }
 
     return results;

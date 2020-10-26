@@ -8,7 +8,7 @@ evm::Processor::Processor(EvmPipeline& evmPipeline, Display& display, int buffer
 
 }
 
-void evm::Processor::process(Mat& original, Mat& roi) {
+void evm::Processor::process(Mat& original, Roi& roi) {
     _originals.push_back(original);
     _rois.push_back(roi);
 

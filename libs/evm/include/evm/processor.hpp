@@ -17,7 +17,7 @@ namespace evm {
     public:
         Processor(EvmPipeline& evmPipeline, Display& display, int bufferSize);
 
-        void process(Mat& original, Mat& roi);
+        void process(Mat& original, Roi& roi);
         void stop();
 
     private:
@@ -25,6 +25,6 @@ namespace evm {
         Display* _display;
         int _bufferSize;
         vector<Mat> _originals;
-        vector<Mat> _rois;
+        vector<Roi> _rois;
     };
 }

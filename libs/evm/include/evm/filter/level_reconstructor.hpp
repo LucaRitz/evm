@@ -6,9 +6,9 @@
 namespace evm {
     class EXPORT LevelReconstructor : public Reconstructor {
     public:
-        LevelReconstructor(int level);
+        explicit LevelReconstructor(int level);
 
-        vector<Mat> operator()(vector<Mat> originals, const vector<shared_ptr<Pyramid>>& amplified);
+        virtual vector<Roi> operator()(const vector<Roi>& originals, const vector<shared_ptr<Pyramid>>& amplified) const override;
 
     private:
         int _level;

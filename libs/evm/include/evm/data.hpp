@@ -13,14 +13,24 @@ using std::promise;
 using std::shared_ptr;
 
 namespace evm {
+    struct EXPORT Position {
+        int _x;
+        int _y;
+    };
+
+    struct EXPORT Roi {
+        Mat _roi;
+        Position _position;
+    };
+
     struct EXPORT OutputData {
         vector<Mat> _originals;
-        vector<Mat> _processed_rois;
+        vector<Roi> _processed_rois;
     };
 
     struct EXPORT InputData {
         vector<Mat> _originals;
-        vector<Mat> _rois;
+        vector<Roi> _rois;
         promise<OutputData> _promise;
     };
 

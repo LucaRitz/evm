@@ -8,7 +8,7 @@ namespace evm {
     public:
         explicit LaplaceSpatialFilter(int levels); // TODO: Ignore levels
 
-        SpatialFiltered operator()(const vector<Mat>& frames);
+        SpatialFiltered operator()(const vector<Roi>& frames);
 
     private:
         int _levels;

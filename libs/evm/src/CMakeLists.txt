@@ -6,6 +6,7 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${EVM_INCLUDE_DIR}/display.hpp
         ${EVM_INCLUDE_DIR}/pyramid.hpp
         ${EVM_INCLUDE_DIR}/evm_pipeline.hpp
+        ${EVM_INCLUDE_DIR}/roi_reconstructor.hpp
 
         PRIVATE
         capturing_pipeline.cpp

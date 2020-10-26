@@ -4,6 +4,7 @@
 #include <evm/impl/webcam_capture.hpp>
 #include <evm/impl/video_capture.hpp>
 #include <evm/impl/roi_default.hpp>
+#include <evm/impl/roi_face_capture.hpp>
 #include <evm/processor.hpp>
 #include <evm/evm_pipeline.hpp>
 #include <evm/display.hpp>
@@ -23,8 +24,8 @@ int main() {
 
     //evm::WebcamCapture videoCapture;
     evm::VideoCapture videoCapture{"resources/test_2.mp4"};
-    evm::RoiDefault roiCapture;
-    evm::Display display(30); // TODO: Add roi inverter
+    evm::RoiFaceCapture roiCapture;
+    evm::Display display(roiCapture.getReconstructor(), 30);
     evm::Processor processor(evmPipeline, display, 60);
     evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);
 
