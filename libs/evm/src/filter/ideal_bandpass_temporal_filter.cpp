@@ -57,16 +57,22 @@ evm::TemporalFiltered evm::IdealBandpassTemporalFilter::operator()(const Spatial
 
 Mat evm::IdealBandpassTemporalFilter::concat(int level, const vector<shared_ptr<Pyramid>>& pyramids) {
     Mat allFrames;
+    Mat origUnchanged;
+    static int count = 0;
     for (const auto& pyr : pyramids) {
         Mat singleFrame = pyr->at(level);
+        if (allFrames.empty()) {
+            origUnchanged = singleFrame;
+        }
+        cv::resize(singleFrame, singleFrame, origUnchanged.size(), 0, 0, cv::INTER_LINEAR);
         singleFrame = singleFrame.reshape(singleFrame.channels(), singleFrame.cols*singleFrame.rows).clone();
+
         if(allFrames.cols == 0) {
             singleFrame.copyTo(allFrames);
         } else {
-            hconcat(allFrames,singleFrame,allFrames);
+            hconcat(allFrames, singleFrame, allFrames);
         }
     }
-
     return allFrames;
 }
 

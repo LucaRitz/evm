@@ -29,7 +29,9 @@ void evm::CapturingPipeline::work(atomic<bool>& running, Capture& capture, RoiCa
             stop(false);
         } else {
             auto roiFrame = roiCapture.roi(frame);
-            processor.process(frame, roiFrame);
+            if (!roiFrame._roi.empty()) {
+                processor.process(frame, roiFrame);
+            }
         }
     }
 }

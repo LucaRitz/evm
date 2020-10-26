@@ -17,16 +17,16 @@
 int main() {
     evm::LaplaceSpatialFilter spatialFilter(4);
     evm::IdealBandpassTemporalFilter temporalFilter(0.833, 1, 30);
-    evm::Amplifier amplifier{std::vector<int>{100, 1, 1, 1}};
+    evm::Amplifier amplifier{std::vector<int>{140, 1, 1, 1}};
     //evm::Reconstructor reconstructor;
     evm::LevelReconstructor reconstructor{0};
     evm::EvmPipeline evmPipeline(&spatialFilter, &temporalFilter, &amplifier, &reconstructor);
 
-    //evm::WebcamCapture videoCapture;
-    evm::VideoCapture videoCapture{"resources/test_2.mp4"};
+    evm::WebcamCapture videoCapture;
+    //evm::VideoCapture videoCapture{"resources/test_2.mp4"};
     evm::RoiFaceCapture roiCapture;
     evm::Display display(roiCapture.getReconstructor(), 30);
-    evm::Processor processor(evmPipeline, display, 60);
+    evm::Processor processor(evmPipeline, display, 90);
     evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);
 
     capturingPipeline.join();

@@ -32,7 +32,8 @@ void evm::Display::work(atomic<bool>& running, queue<future<evm::OutputData>>& q
                 frame.convertTo(converted, CV_8UC3, 255.0/(max-min), -min * 255.0/(max-min));
 
                 cv::imshow("Output", converted);
-                cv::waitKey(1000/framesPerSec);
+                //cv::waitKey(1000/framesPerSec);
+                cv::waitKey(0);
             }
             continue;
         }
