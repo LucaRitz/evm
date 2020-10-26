@@ -19,3 +19,8 @@ void evm::Processor::process(Mat& original, Mat& roi) {
         _rois.clear();
     }
 }
+
+void evm::Processor::stop() {
+    _evmPipeline->stop();
+    _display->stop();
+}

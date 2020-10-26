@@ -17,7 +17,8 @@ namespace evm {
     public:
         CapturingPipeline(Capture& capture, RoiCapture& roiCapture, Processor& processor);
 
-        void stop();
+        void stop(bool doJoin = true);
+        void join();
 
     private:
         atomic<bool> _running;

@@ -18,6 +18,7 @@ namespace evm {
         Processor(EvmPipeline& evmPipeline, Display& display, int bufferSize);
 
         void process(Mat& original, Mat& roi);
+        void stop();
 
     private:
         EvmPipeline* _evmPipeline;

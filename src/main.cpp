@@ -28,13 +28,7 @@ int main() {
     evm::Processor processor(evmPipeline, display, 60);
     evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);
 
-
-    while(true) {
-
-    }
-    capturingPipeline.stop();
-    evmPipeline.stop();
-    display.stop();
+    capturingPipeline.join();
 
     return 0;
 }
