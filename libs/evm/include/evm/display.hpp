@@ -25,7 +25,8 @@ namespace evm {
     public:
         Display(RoiReconstructor& roiReconstructor, int framesPerSec);
 
-        virtual void show(future<OutputData>& frames);
+        void show(future<OutputData>& frames);
+        virtual void display(const Mat& frame, int framesPerSec);
         void stop(bool waitUntilDone = false);
         void join();
         bool stopped();

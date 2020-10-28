@@ -26,8 +26,8 @@ namespace evm {
 
     class EXPORT EvmPipeline {
     public:
-        EvmPipeline(SpatialFilter* spatialFilter, TemporalFilter* temporalFilter, Amplifier* amplifier,
-                    Reconstructor* reconstructor);
+        EvmPipeline(SpatialFilter& spatialFilter, TemporalFilter& temporalFilter, Amplifier& amplifier,
+                    Reconstructor& reconstructor);
 
         future<OutputData> calculate(InputData&& input);
         void stop(bool waitUntilDone = false);
@@ -42,10 +42,10 @@ namespace evm {
         function<void(bool)> _stoppedListener;
         queue<InputData> _queue;
         mutex _mutex;
-        SpatialFilter* _spatialFilter;
-        TemporalFilter* _temporalFilter;
-        Amplifier* _amplifier;
-        Reconstructor* _reconstructor;
+        SpatialFilter& _spatialFilter;
+        TemporalFilter& _temporalFilter;
+        Amplifier& _amplifier;
+        Reconstructor& _reconstructor;
         thread _thread;
 
         void work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<bool>& stopped, queue<InputData>& queue,

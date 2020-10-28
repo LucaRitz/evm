@@ -7,8 +7,8 @@
 
 using std::promise;
 
-evm::EvmPipeline::EvmPipeline(SpatialFilter* spatialFilter, TemporalFilter* temporalFilter, Amplifier* amplifier,
-                              Reconstructor* reconstructor) :
+evm::EvmPipeline::EvmPipeline(SpatialFilter& spatialFilter, TemporalFilter& temporalFilter, Amplifier& amplifier,
+                              Reconstructor& reconstructor) :
     _running(true),
     _finishIfDone(false),
     _stopped(false),
@@ -20,8 +20,8 @@ evm::EvmPipeline::EvmPipeline(SpatialFilter* spatialFilter, TemporalFilter* temp
     _amplifier(amplifier),
     _reconstructor(reconstructor),
     _thread(&EvmPipeline::work, this, std::ref(_running), std::ref(_finishIfDone), std::ref(_stopped), std::ref(_queue),
-            std::ref(_mutex), std::ref(*spatialFilter), std::ref(*temporalFilter), std::ref(*amplifier),
-            std::ref(*reconstructor)) {
+            std::ref(_mutex), std::ref(_spatialFilter), std::ref(_temporalFilter), std::ref(_amplifier),
+            std::ref(_reconstructor)) {
 
 }
 

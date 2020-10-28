@@ -8,5 +8,5 @@ Mat evm::RoiPositionReconstructor::reconstruct(const Mat& original, const Roi& r
 
     roiMat.copyTo(original(cv::Rect(roi._position._x, roi._position._y, roiMat.cols, roiMat.rows)));
     //cv::cvtColor(roiMat, roiMat, cv::COLOR_BGR2GRAY);
-    return roiMat;
+    return original;
 }

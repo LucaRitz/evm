@@ -6,6 +6,7 @@
 #include <evm/impl/roi_default.hpp>
 #include <evm/impl/roi_face_capture.hpp>
 #include <evm/impl/roi_fix_capture.hpp>
+#include <evm/impl/roi_blur_filter.hpp>
 #include <evm/processor.hpp>
 #include <evm/evm_pipeline.hpp>
 #include <evm/display.hpp>
@@ -16,20 +17,23 @@
 #include <evm/filter/level_reconstructor.hpp>
 
 int main() {
-    evm::LaplaceSpatialFilter spatialFilter(4);
-    evm::IdealBandpassTemporalFilter temporalFilter(0.833, 1, 30);
+    evm::LaplaceSpatialFilter spatialFilter(6);
+    evm::IdealBandpassTemporalFilter temporalFilter(0.83, 1, 30, 0);
     evm::Amplifier amplifier{std::vector<int>{100}};
     //evm::Reconstructor reconstructor;
     evm::LevelReconstructor reconstructor{0};
-    evm::EvmPipeline evmPipeline(&spatialFilter, &temporalFilter, &amplifier, &reconstructor);
+    evm::EvmPipeline evmPipeline(spatialFilter, temporalFilter, amplifier, reconstructor);
 
     //evm::WebcamCapture videoCapture;
-    evm::VideoCapture videoCapture{"resources/test.mp4"};
+    evm::VideoCapture videoCapture{"resources/Face_test.mp4"};
     //evm::RoiFaceCapture roiCapture;
     //evm::RoiFixCapture roiCapture(490, 200, 430, 450);
-    evm::RoiFixCapture roiCapture(250, 80, 200, 180);
+    // evm::RoiFixCapture roiCapture(580, 160, 220, 280); Face.mp4
+    evm::RoiFixCapture roiCapture(780, 100, 240, 320);
+    //evm::RoiDefault roiCapture;
     evm::Display display(roiCapture.getReconstructor(), 30);
     evm::Processor processor(evmPipeline, display, 60);
+    evm::RoiBlurFilter roiBlurFilter{10, 10};
     evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);
 
     //capturingPipeline.stop();

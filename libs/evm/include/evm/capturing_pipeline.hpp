@@ -3,6 +3,7 @@
 #include "capture.hpp"
 #include "roi_capture.hpp"
 #include "processor.hpp"
+#include "roi_filter.hpp"
 
 #include "macro_definition.hpp"
 #include <atomic>
@@ -15,7 +16,8 @@ namespace evm {
 
     class EXPORT CapturingPipeline {
     public:
-        CapturingPipeline(Capture& capture, RoiCapture& roiCapture, Processor& processor);
+        CapturingPipeline(Capture& capture, RoiCapture& roiCapture, Processor& processor,
+                          RoiFilter* roiFilter = nullptr);
 
         void stop();
         void join();
@@ -24,9 +26,11 @@ namespace evm {
         atomic<bool> _running;
         Capture* _capture;
         RoiCapture* _roiCapture;
+        RoiFilter* _roiFilter;
         Processor* _processor;
         thread _thread;
 
-        void work(atomic<bool>& running, Capture& capture, RoiCapture& roiCapture, Processor& processor);
+        void work(atomic<bool>& running, Capture& capture, RoiCapture& roiCapture, RoiFilter*& roiFilter,
+                  Processor& processor);
     };
 }

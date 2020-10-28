@@ -5,9 +5,7 @@ _rect(x, y, width, height) {
 }
 
 evm::Roi evm::RoiFixCapture::roi(const Mat& frame) {
-    Mat roi = frame(_rect);
-    cv::blur(roi, roi, cv::Size(25, 25));
-    return Roi{roi, Position{_rect.x, _rect.y}};
+    return Roi{frame(_rect), Position{_rect.x, _rect.y}};
 }
 
 evm::RoiReconstructor& evm::RoiFixCapture::getReconstructor() {

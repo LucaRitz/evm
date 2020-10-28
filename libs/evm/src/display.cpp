@@ -18,6 +18,12 @@ void evm::Display::show(future<OutputData>& frames) {
     _mutex.unlock();
 }
 
+void evm::Display::display(const Mat &frame, int framesPerSec) {
+    cv::imshow("Output 2", frame);
+    cv::waitKey(1000/framesPerSec + 1);
+    //cv::waitKey(0);
+}
+
 void
 evm::Display::work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<bool>& stopped,
                    queue<future<evm::OutputData>>& queue, mutex& mut, int framesPerSec) {
@@ -37,9 +43,7 @@ evm::Display::work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<boo
                 minMaxLoc(frame, &min, &max);
                 frame.convertTo(converted, CV_8UC3, 255.0 / (max - min), -min * 255.0 / (max - min));
 
-                cv::imshow("Output", converted);
-                cv::waitKey(1000/framesPerSec + 1);
-                //cv::waitKey(0);
+                display(converted, framesPerSec);
             }
             continue;
         } else if (finishIfDone) {

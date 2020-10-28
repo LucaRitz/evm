@@ -6,6 +6,7 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${EVM_INCLUDE_DIR}/impl/roi_face_capture.hpp
         ${EVM_INCLUDE_DIR}/impl/roi_fix_capture.hpp
         ${EVM_INCLUDE_DIR}/impl/roi_position_reconstructor.hpp
+        ${EVM_INCLUDE_DIR}/impl/roi_blur_filter.hpp
 
         PRIVATE
         webcam_capture.cpp
@@ -15,4 +16,5 @@ target_sources(${PROJECT_NAME} PUBLIC
         roi_face_capture.cpp
         roi_position_reconstructor.cpp
         roi_fix_capture.cpp
+        roi_blur_filter.cpp
         )

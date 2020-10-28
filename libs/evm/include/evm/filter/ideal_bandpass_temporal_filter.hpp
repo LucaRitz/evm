@@ -7,7 +7,7 @@
 namespace evm {
     class EXPORT IdealBandpassTemporalFilter : public TemporalFilter {
     public:
-        IdealBandpassTemporalFilter(double lowerFreq, double upperFreq, int sampleRate);
+        IdealBandpassTemporalFilter(double lowerFreq, double upperFreq, int sampleRate, int level = -1);
 
         TemporalFiltered operator()(const SpatialFiltered& spatialFiltered);
 
@@ -15,6 +15,7 @@ namespace evm {
         double _lowerFreq;
         double _upperFreq;
         int _sampleRate;
+        int _level;
 
         static Mat concat(int level, const vector<shared_ptr<Pyramid>>& pyramids);
         static Mat buildFilterOfFrequencyBand(Mat& filter, double lowerBound, double upperBound, int sampleRate);
