@@ -10,28 +10,34 @@ evm::CapturingPipeline::CapturingPipeline(Capture& capture, RoiCapture& roiCaptu
 
 }
 
-void evm::CapturingPipeline::stop(bool doJoin) {
+void evm::CapturingPipeline::stop() {
     _running = false;
-    _processor->stop();
-    if (doJoin) {
-        join();
-    }
+    join();
 }
 
 void evm::CapturingPipeline::join() {
-    _thread.join();
+    if (_thread.joinable()) {
+        _thread.join();
+    }
 }
 
 void evm::CapturingPipeline::work(atomic<bool>& running, Capture& capture, RoiCapture& roiCapture, Processor& processor) {
     while (running) {
         auto frame = capture.frame();
         if (frame.empty()) {
-            stop(false);
+            _running = false;
+            processor.stop(true);
+            processor.join();
         } else {
             auto roiFrame = roiCapture.roi(frame);
             if (!roiFrame._roi.empty()) {
                 processor.process(frame, roiFrame);
             }
         }
+    }
+
+    if (!processor.stopped()) {
+        processor.stop();
+        processor.join();
     }
 }

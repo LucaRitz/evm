@@ -18,7 +18,9 @@ namespace evm {
         Processor(EvmPipeline& evmPipeline, Display& display, int bufferSize);
 
         void process(Mat& original, Roi& roi);
-        void stop();
+        void stop(bool waitUntilDone = false);
+        void join();
+        bool stopped();
 
     private:
         EvmPipeline* _evmPipeline;
@@ -26,5 +28,7 @@ namespace evm {
         int _bufferSize;
         vector<Mat> _originals;
         vector<Roi> _rois;
+
+        void evmPipelineStopped(bool waitUntilDone);
     };
 }

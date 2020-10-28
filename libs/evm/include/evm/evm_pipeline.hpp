@@ -7,6 +7,7 @@
 #include <atomic>
 #include <queue>
 #include <mutex>
+#include <functional>
 
 using std::thread;
 using std::future;
@@ -14,6 +15,7 @@ using std::atomic;
 using std::queue;
 using std::mutex;
 using evm::OutputData;
+using std::function;
 
 namespace evm {
 
@@ -28,11 +30,16 @@ namespace evm {
                     Reconstructor* reconstructor);
 
         future<OutputData> calculate(InputData&& input);
-        void stop();
-
+        void stop(bool waitUntilDone = false);
+        void join();
+        bool stopped();
+        void setStoppedListener(function<void(bool)> listener);
 
     private:
         atomic<bool> _running;
+        atomic<bool> _finishIfDone;
+        atomic<bool> _stopped;
+        function<void(bool)> _stoppedListener;
         queue<InputData> _queue;
         mutex _mutex;
         SpatialFilter* _spatialFilter;
@@ -41,7 +48,8 @@ namespace evm {
         Reconstructor* _reconstructor;
         thread _thread;
 
-        void work(atomic<bool>& running, queue<InputData>& queue, mutex& mut, SpatialFilter& spatialFilter,
-                TemporalFilter& temporalFilter, Amplifier& amplifier, Reconstructor& reconstructor);
+        void work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<bool>& stopped, queue<InputData>& queue,
+                  mutex& mut, SpatialFilter& spatialFilter, TemporalFilter& temporalFilter, Amplifier& amplifier,
+                  Reconstructor& reconstructor);
     };
 }

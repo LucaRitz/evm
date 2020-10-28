@@ -5,7 +5,7 @@ evm::Processor::Processor(EvmPipeline& evmPipeline, Display& display, int buffer
     _evmPipeline(&evmPipeline),
     _display(&display),
     _bufferSize(bufferSize) {
-
+    _evmPipeline->setStoppedListener([this](bool waitUntilDone) { this->evmPipelineStopped(waitUntilDone); });
 }
 
 void evm::Processor::process(Mat& original, Roi& roi) {
@@ -20,7 +20,21 @@ void evm::Processor::process(Mat& original, Roi& roi) {
     }
 }
 
-void evm::Processor::stop() {
-    _evmPipeline->stop();
-    _display->stop();
+void evm::Processor::stop(bool waitUntilDone) {
+    _evmPipeline->stop(waitUntilDone);
+}
+
+void evm::Processor::join() {
+    _evmPipeline->join();
+    _display->join();
+}
+
+bool evm::Processor::stopped() {
+    return _evmPipeline->stopped() && _display->stopped();
+}
+
+void evm::Processor::evmPipelineStopped(bool waitUntilDone) {
+    if (!_display->stopped()) {
+        _display->stop(waitUntilDone);
+    }
 }
