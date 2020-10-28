@@ -12,12 +12,14 @@ void evm::Processor::process(Mat& original, Roi& roi) {
     _originals.push_back(original);
     _rois.push_back(roi);
     if (_originals.size() == _bufferSize) {
-        pushToPipeline();
+        future<OutputData> result = _evmPipeline->calculate(InputData{_originals, _rois});
+        _display->show(result);
+        _originals.clear();
+        _rois.clear();
     }
 }
 
 void evm::Processor::stop(bool waitUntilDone) {
-    pushToPipeline();
     _evmPipeline->stop(waitUntilDone);
 }
 
@@ -33,15 +35,6 @@ bool evm::Processor::stopped() {
 void evm::Processor::evmPipelineStopped(bool waitUntilDone) {
     if (!_display->stopped()) {
         _display->stop(waitUntilDone);
-    }
-}
-
-void evm::Processor::pushToPipeline() {
-    if (!_originals.empty()) {
-        future<OutputData> result = _evmPipeline->calculate(InputData{_originals, _rois});
-        _display->show(result);
-        _originals.clear();
-        _rois.clear();
     }
 }
 

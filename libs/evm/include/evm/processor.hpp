@@ -30,7 +30,6 @@ namespace evm {
         vector<Roi> _rois;
 
         void evmPipelineStopped(bool waitUntilDone);
-        void pushToPipeline();
         static int calcBufferSize(int fps);
     };
 }
