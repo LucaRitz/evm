@@ -9,18 +9,15 @@ evm::Processor::Processor(EvmPipeline& evmPipeline, Display& display, int fps) :
 }
 
 void evm::Processor::process(Mat& original, Roi& roi) {
-    static int framecount = 0;
     _originals.push_back(original);
     _rois.push_back(roi);
     if (_originals.size() == _bufferSize) {
-        future<OutputData> result = _evmPipeline->calculate(InputData{_originals, _rois});
-        _display->show(result);
-        _originals.clear();
-        _rois.clear();
+        pushToPipeline();
     }
 }
 
 void evm::Processor::stop(bool waitUntilDone) {
+    pushToPipeline();
     _evmPipeline->stop(waitUntilDone);
 }
 
@@ -39,8 +36,17 @@ void evm::Processor::evmPipelineStopped(bool waitUntilDone) {
     }
 }
 
+void evm::Processor::pushToPipeline() {
+    if (!_originals.empty()) {
+        future<OutputData> result = _evmPipeline->calculate(InputData{_originals, _rois});
+        _display->show(result);
+        _originals.clear();
+        _rois.clear();
+    }
+}
+
 int evm::Processor::calcBufferSize(int fps) {
-    /*// Calculate number of images needed to represent 2 seconds of film material
+    // Calculate number of images needed to represent 2 seconds of film material
     unsigned int round = (unsigned int) std::max(2*fps,16);
     round--;
     round |= round >> 1;
@@ -50,6 +56,5 @@ int evm::Processor::calcBufferSize(int fps) {
     round |= round >> 16;
     round++;
 
-    return round;*/
-    return fps;
+    return round;
 }

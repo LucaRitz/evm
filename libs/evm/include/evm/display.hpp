@@ -24,6 +24,7 @@ namespace evm {
     class EXPORT Display {
     public:
         Display(RoiReconstructor& roiReconstructor, int framesPerSec);
+        virtual ~Display() = default;
 
         void show(future<OutputData>& frames);
         virtual void display(const Mat& frame, int framesPerSec);

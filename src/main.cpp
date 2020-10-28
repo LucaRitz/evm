@@ -10,6 +10,7 @@
 #include <evm/processor.hpp>
 #include <evm/evm_pipeline.hpp>
 #include <evm/display.hpp>
+#include <evm/impl/display_video.hpp>
 #include <evm/filter/laplace_spatial_filter.hpp>
 #include <evm/filter/ideal_bandpass_temporal_filter.hpp>
 #include <evm/filter/amplifier.hpp>
@@ -18,7 +19,7 @@
 
 int main() {
     evm::LaplaceSpatialFilter spatialFilter(6);
-    evm::IdealBandpassTemporalFilter temporalFilter(0.83, 1, 30, 0);
+    evm::IdealBandpassTemporalFilter temporalFilter(0.833, 1.2, 30, 0);
     evm::Amplifier amplifier{std::vector<int>{100}};
     //evm::Reconstructor reconstructor;
     evm::LevelReconstructor reconstructor{0};
@@ -31,8 +32,9 @@ int main() {
     // evm::RoiFixCapture roiCapture(580, 160, 220, 280); Face.mp4
     evm::RoiFixCapture roiCapture(780, 100, 240, 320);
     //evm::RoiDefault roiCapture;
-    evm::Display display(roiCapture.getReconstructor(), 30);
-    evm::Processor processor(evmPipeline, display, 60);
+    //evm::Display display(roiCapture.getReconstructor(), 30);
+    evm::DisplayVideo display(roiCapture.getReconstructor(), 30, "output.avi", 1280, 720);
+    evm::Processor processor(evmPipeline, display, 30);
     evm::RoiBlurFilter roiBlurFilter{10, 10};
     evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);
 
