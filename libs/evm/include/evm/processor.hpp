@@ -13,11 +13,12 @@ using std::vector;
 using cv::Mat;
 
 namespace evm {
+
     class EXPORT Processor {
     public:
-        Processor(EvmPipeline& evmPipeline, Display& display, int bufferSize);
+        Processor(EvmPipeline& evmPipeline, Display& display);
 
-        void process(Mat& original, Roi& roi);
+        void process(Mat& original, Roi& roi, int fps);
         void stop(bool waitUntilDone = false);
         void join();
         bool stopped();
@@ -25,11 +26,7 @@ namespace evm {
     private:
         EvmPipeline* _evmPipeline;
         Display* _display;
-        int _bufferSize;
-        vector<Mat> _originals;
-        vector<Roi> _rois;
 
         void evmPipelineStopped(bool waitUntilDone);
-        static int calcBufferSize(int fps);
     };
 }

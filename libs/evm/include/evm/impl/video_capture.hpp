@@ -15,6 +15,7 @@ namespace evm {
         ~VideoCapture();
 
         Mat frame();
+        virtual int fps() override;
 
     private:
         cv::VideoCapture _videoCapture;

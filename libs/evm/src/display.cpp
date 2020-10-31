@@ -42,7 +42,6 @@ evm::Display::work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<boo
                 double min, max;
                 minMaxLoc(frame, &min, &max);
                 frame.convertTo(converted, CV_8UC3, 255.0 / (max - min), -min * 255.0 / (max - min));
-
                 display(converted, framesPerSec);
             }
             continue;

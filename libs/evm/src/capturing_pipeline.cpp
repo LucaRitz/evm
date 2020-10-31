@@ -4,6 +4,7 @@
 evm::CapturingPipeline::CapturingPipeline(Capture& capture, RoiCapture& roiCapture, Processor& processor,
                                           RoiFilter* roiFilter) :
         _running(true),
+        _fpsCalculator(32),
         _capture(&capture),
         _roiCapture(&roiCapture),
         _processor(&processor),
@@ -27,18 +28,27 @@ void evm::CapturingPipeline::join() {
 void evm::CapturingPipeline::work(atomic<bool>& running, Capture& capture, RoiCapture& roiCapture,
                                   RoiFilter*& roiFilter, Processor& processor) {
     while (running) {
+        _fpsCalculator.startMeasurement();
         auto frame = capture.frame();
         if (frame.empty()) {
             _running = false;
             processor.stop(true);
             processor.join();
         } else {
+            _fpsCalculator.incSample();
+            frame.convertTo(frame, CV_32FC3);
             auto roiFrame = roiCapture.roi(frame);
             if (roiFilter != nullptr) {
                 roiFrame = roiFilter->filter(roiFrame);
             }
             if (!roiFrame._roi.empty()) {
-                processor.process(frame, roiFrame);
+                //_fpsCalculator.stopMeasurement();
+                int fps = capture.fps();
+                if (capture.fps() == -1) {
+                    _fpsCalculator.stopMeasurement();
+                    fps = _fpsCalculator.fps();
+                }
+                processor.process(frame, roiFrame, fps);
             }
         }
     }

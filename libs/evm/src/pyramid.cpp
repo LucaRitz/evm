@@ -1,6 +1,9 @@
 #include "../include/evm/pyramid.hpp"
 
 Mat evm::Pyramid::at(int level) const {
+    if (level > levels() - 1) {
+        return Mat{};
+    }
     return _levels.at(level);
 }
 

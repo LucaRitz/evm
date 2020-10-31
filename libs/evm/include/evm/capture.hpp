@@ -13,5 +13,6 @@ namespace evm {
     public:
         virtual ~Capture() = default;
         virtual Mat frame() = 0;
+        virtual int fps() = 0;
     };
 }

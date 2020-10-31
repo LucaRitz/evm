@@ -48,6 +48,9 @@ namespace evm {
         Reconstructor& _reconstructor;
         thread _thread;
 
+        vector<Mat> _originals;
+        vector<Roi> _rois;
+
         void work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<bool>& stopped, queue<InputData>& queue,
                   mutex& mut, SpatialFilter& spatialFilter, TemporalFilter& temporalFilter, Amplifier& amplifier,
                   Reconstructor& reconstructor);

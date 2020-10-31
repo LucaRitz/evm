@@ -11,6 +11,6 @@ using cv::Mat;
 namespace evm {
     class EXPORT TemporalFilter {
     public:
-        virtual TemporalFiltered operator()(const SpatialFiltered& spatialFiltered) = 0;
+        virtual TemporalFiltered operator()(const SpatialFiltered& spatialFiltered, int fps) = 0;
     };
 }

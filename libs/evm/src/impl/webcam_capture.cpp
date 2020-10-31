@@ -13,7 +13,10 @@ evm::WebcamCapture::~WebcamCapture() {
 Mat evm::WebcamCapture::frame() {
     Mat frame;
     _videoCapture >> frame;
-    frame.convertTo(frame, CV_32FC3);
 
     return frame;
+}
+
+int evm::WebcamCapture::fps() {
+    return -1;
 }

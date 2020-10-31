@@ -4,6 +4,7 @@
 #include "roi_capture.hpp"
 #include "processor.hpp"
 #include "roi_filter.hpp"
+#include "fps_calculator.hpp"
 
 #include "macro_definition.hpp"
 #include <atomic>
@@ -24,6 +25,7 @@ namespace evm {
 
     private:
         atomic<bool> _running;
+        FpsCalculator _fpsCalculator;
         Capture* _capture;
         RoiCapture* _roiCapture;
         RoiFilter* _roiFilter;

@@ -31,6 +31,7 @@ namespace evm {
     struct EXPORT InputData {
         vector<Mat> _originals;
         vector<Roi> _rois;
+        int _fps;
         promise<OutputData> _promise;
     };
 

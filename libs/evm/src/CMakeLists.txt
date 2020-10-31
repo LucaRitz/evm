@@ -8,6 +8,7 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${EVM_INCLUDE_DIR}/evm_pipeline.hpp
         ${EVM_INCLUDE_DIR}/roi_reconstructor.hpp
         ${EVM_INCLUDE_DIR}/roi_filter.hpp
+        ${EVM_INCLUDE_DIR}/fps_calculator.hpp
 
         PRIVATE
         capturing_pipeline.cpp
@@ -15,6 +16,7 @@ target_sources(${PROJECT_NAME} PUBLIC
         processor.cpp
         pyramid.cpp
         evm_pipeline.cpp
+        fps_calculator.cpp
         )
 add_subdirectory(impl)
 add_subdirectory(filter)

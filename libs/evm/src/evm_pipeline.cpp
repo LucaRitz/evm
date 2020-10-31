@@ -63,11 +63,30 @@ void evm::EvmPipeline::work(atomic<bool>& running, atomic<bool>& finishIfDone, a
             queue.pop();
             mut.unlock();
 
+            _originals.insert(_originals.end(), input._originals.begin(), input._originals.end());
+            _rois.insert(_rois.end(), input._rois.begin(), input._rois.end());
+
             auto spatialFiltered = spatialFilter(input._rois);
-            auto temporalFiltered = temporalFilter(spatialFiltered);
-            auto amplified = amplifier * temporalFiltered._temporalFiltered;
-            auto reconstructed = reconstructor(input._rois, amplified);
-            input._promise.set_value(OutputData{input._originals, reconstructed});
+            auto temporalFiltered = temporalFilter(spatialFiltered, input._fps);
+
+            if (!temporalFiltered._temporalFiltered.empty()) {
+                int results = temporalFiltered._temporalFiltered.size();
+                auto amplified = amplifier * temporalFiltered._temporalFiltered;
+
+                vector<Roi> rois;
+                rois.insert(rois.begin(), _rois.begin(), _rois.begin() + results);
+                _rois.erase(_rois.begin(), _rois.begin() + results);
+                auto reconstructed = reconstructor(rois, amplified);
+
+                vector<Mat> originals;
+                originals.insert(originals.begin(), _originals.begin(), _originals.begin() + results);
+                _originals.erase(_originals.begin(), _originals.begin() + results);
+                input._promise.set_value(OutputData{originals, reconstructed});
+
+            } else {
+                input._promise.set_value(OutputData{vector<Mat>{}, vector<Roi>{}});
+            }
+
             continue;
         } else if (finishIfDone) {
             running = false;

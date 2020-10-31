@@ -11,6 +11,10 @@ evm::VideoCapture::~VideoCapture() {
 Mat evm::VideoCapture::frame() {
     Mat frame;
     _videoCapture >> frame;
-    frame.convertTo(frame, CV_32FC3);
     return frame;
+}
+
+int evm::VideoCapture::fps() {
+    return _videoCapture.get(cv::CAP_PROP_FPS);
+
 }
