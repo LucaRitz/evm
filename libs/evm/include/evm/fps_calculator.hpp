@@ -14,12 +14,12 @@ namespace evm {
         void startMeasurement();
         void stopMeasurement();
         void incSample();
-        int fps();
+        double fps();
 
     private:
         const int _refreshAfter;
         int _sampleNumber;
-        int _currentFps;
+        double _currentFps;
         queue<int> _fps;
         std::chrono::time_point<std::chrono::steady_clock> _start;
     };

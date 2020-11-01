@@ -13,8 +13,9 @@ namespace evm {
         WebcamCapture();
         ~WebcamCapture();
 
-        Mat frame();
+        virtual Mat frame() override;
         virtual int fps() override;
+        virtual Size size() override;
 
     private:
         VideoCapture _videoCapture;

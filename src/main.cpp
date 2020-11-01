@@ -11,6 +11,7 @@
 #include <evm/evm_pipeline.hpp>
 #include <evm/display.hpp>
 #include <evm/impl/display_video.hpp>
+#include <evm/impl/display_video_orig.hpp>
 #include <evm/filter/laplace_spatial_filter.hpp>
 #include <evm/filter/ideal_bandpass_temporal_filter.hpp>
 #include <evm/filter/amplifier.hpp>
@@ -18,24 +19,28 @@
 #include <evm/filter/level_reconstructor.hpp>
 
 int main() {
-    evm::LaplaceSpatialFilter spatialFilter(7);
-    evm::IdealBandpassTemporalFilter temporalFilter(0.84, 1.43, 0);
-    evm::Amplifier amplifier{std::vector<int>{140}};
+    evm::LaplaceSpatialFilter spatialFilter(4);
+    evm::IdealBandpassTemporalFilter temporalFilter(0.833, 1, 0);
+    evm::Amplifier amplifier{std::vector<int>{100}};
     //evm::Reconstructor reconstructor;
     evm::LevelReconstructor reconstructor{0};
     evm::EvmPipeline evmPipeline(spatialFilter, temporalFilter, amplifier, reconstructor);
 
     //evm::WebcamCapture videoCapture;
-    evm::VideoCapture videoCapture{"resources/Face_test.mp4"};
+    evm::VideoCapture videoCapture{"resources/mit_dude_orig.mp4"};
     //evm::RoiFaceCapture roiCapture;
     //evm::RoiFixCapture roiCapture(200, 100, 200, 200);
 
-    //evm::RoiFixCapture roiCapture(600, 190, 160,220);
-    evm::RoiFixCapture roiCapture(780, 100, 240, 320);
+    //evm::RoiFixCapture roiCapture(520, 150, 320,300);
+    //evm::RoiFixCapture roiCapture(780, 100, 240, 320);
 
-    //evm::RoiDefault roiCapture;
-    evm::Display display(roiCapture.getReconstructor(), 30);
-    //evm::DisplayVideo display(roiCapture.getReconstructor(), 30, "output.avi", 1280, 720);
+    evm::RoiDefault roiCapture;
+
+    //evm::Display display(roiCapture.getReconstructor(), 30);
+    Size videoSize = videoCapture.size();
+    //evm::DisplayVideo display(roiCapture.getReconstructor(), videoCapture.fps(), "output.avi", videoSize.width, videoSize.height);
+    evm::DisplayVideoOrig display(roiCapture.getReconstructor(), videoCapture.fps(), "output.avi", videoSize.width, videoSize.height, "resources/qt_dude.mp4");
+
     evm::Processor processor(evmPipeline, display);
     evm::RoiBlurFilter roiBlurFilter{10, 10};
     evm::CapturingPipeline capturingPipeline(videoCapture, roiCapture, processor);

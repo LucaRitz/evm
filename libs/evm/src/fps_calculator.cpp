@@ -20,7 +20,7 @@ void evm::FpsCalculator::stopMeasurement() {
     if((_fps.size() == _refreshAfter) && (_sampleNumber == _refreshAfter))
     {
         // Empty queue and store sum
-        int fpsSum = 0;
+        double fpsSum = 0;
         while(!_fps.empty()) {
             fpsSum += _fps.front();
             _fps.pop();
@@ -36,6 +36,6 @@ void evm::FpsCalculator::incSample() {
     _sampleNumber++;
 }
 
-int evm::FpsCalculator::fps() {
+double evm::FpsCalculator::fps() {
     return _currentFps;
 }

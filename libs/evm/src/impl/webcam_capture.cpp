@@ -20,3 +20,8 @@ Mat evm::WebcamCapture::frame() {
 int evm::WebcamCapture::fps() {
     return -1;
 }
+
+cv::Size evm::WebcamCapture::size() {
+    return cv::Size{static_cast<int>(_videoCapture.get(cv::CAP_PROP_FRAME_WIDTH)),
+                    static_cast<int>(_videoCapture.get(cv::CAP_PROP_FRAME_HEIGHT))};
+}

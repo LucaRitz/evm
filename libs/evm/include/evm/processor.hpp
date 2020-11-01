@@ -18,7 +18,7 @@ namespace evm {
     public:
         Processor(EvmPipeline& evmPipeline, Display& display);
 
-        void process(Mat& original, Roi& roi, int fps);
+        void process(Mat& original, Roi& roi, double fps);
         void stop(bool waitUntilDone = false);
         void join();
         bool stopped();

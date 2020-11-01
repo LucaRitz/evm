@@ -12,8 +12,8 @@ evm::IdealBandpassTemporalFilter::IdealBandpassTemporalFilter(double lowerFreq, 
 
 }
 
-evm::TemporalFiltered evm::IdealBandpassTemporalFilter::operator()(const SpatialFiltered& spatialFiltered, int fps) {
-    int optimalBufferSize = bufferSize(fps);
+evm::TemporalFiltered evm::IdealBandpassTemporalFilter::operator()(const SpatialFiltered& spatialFiltered, double fps) {
+    int optimalBufferSize = bufferSize(static_cast<int>(fps));
     vector<shared_ptr<Pyramid>> results;
 
     int newFrames = spatialFiltered._spatialFiltered.size();
@@ -32,10 +32,6 @@ evm::TemporalFiltered evm::IdealBandpassTemporalFilter::operator()(const Spatial
 
     for (int level = 0; level < spatialFiltered._levels; level++) {
 
-        if (_level != -1 && level != _level) {
-            continue;
-        }
-
         if (_filterMat.find(level) == _filterMat.end()) {
             _filterMat[level] = Mat{};
         }
@@ -44,6 +40,12 @@ evm::TemporalFiltered evm::IdealBandpassTemporalFilter::operator()(const Spatial
 
         int originalHeight = spatialFiltered._spatialFiltered.at(0)->at(level).size().height;
         concat(level, filterMat, optimalBufferSize, spatialFiltered._spatialFiltered);
+
+        if (_level != -1 && level != _level) {
+            insert(filterMat, originalHeight, results);
+            continue;
+        }
+
         Mat* channelsToFilter = new Mat[filterMat.channels()];
         cv::split(filterMat, channelsToFilter);
         vector<Mat> filteredChannels;
@@ -119,7 +121,7 @@ Mat evm::IdealBandpassTemporalFilter::concat(int level, Mat& dest, int maxSize, 
 }
 
 Mat evm::IdealBandpassTemporalFilter::buildFilterOfFrequencyBand(Mat& filter, double lowerBound, double upperBound,
-                                                                 int sampleRate) {
+                                                                 double sampleRate) {
     double width = filter.cols;
     double height = filter.rows;
 

@@ -1,4 +1,5 @@
 #include "evm/filter/level_reconstructor.hpp"
+#include <algorithm>
 
 evm::LevelReconstructor::LevelReconstructor(int level) : _level(level) {
 
@@ -14,6 +15,13 @@ vector<evm::Roi> evm::LevelReconstructor::operator()(const vector<Roi>& original
             cv::resize(levelMat, levelMat, original.size(), 0, 0, cv::INTER_LINEAR);
             /*Mat channels[3];
             cv::split(levelMat, channels);
+
+            double min, max;
+            minMaxLoc(channels[2], &min, &max);
+            std::cout << "min " << min << " max " << max << std::endl;
+            cv::threshold(channels[2], channels[2], 0.95f * max, max, cv::THRESH_TRUNC);
+            //cv::threshold(channels[2], channels[2], 0.95f * max, max, cv::THRESH_BINARY);
+
             channels[0] = cv::Scalar(0);
             channels[1] = cv::Scalar(0);
 

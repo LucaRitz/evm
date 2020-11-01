@@ -44,7 +44,7 @@ void evm::CapturingPipeline::work(atomic<bool>& running, Capture& capture, RoiCa
             if (!roiFrame._roi.empty()) {
                 //_fpsCalculator.stopMeasurement();
                 int fps = capture.fps();
-                if (capture.fps() == -1) {
+                if (fps == -1) {
                     _fpsCalculator.stopMeasurement();
                     fps = _fpsCalculator.fps();
                 }

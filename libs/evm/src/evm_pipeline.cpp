@@ -82,7 +82,6 @@ void evm::EvmPipeline::work(atomic<bool>& running, atomic<bool>& finishIfDone, a
                 originals.insert(originals.begin(), _originals.begin(), _originals.begin() + results);
                 _originals.erase(_originals.begin(), _originals.begin() + results);
                 input._promise.set_value(OutputData{originals, reconstructed});
-
             } else {
                 input._promise.set_value(OutputData{vector<Mat>{}, vector<Roi>{}});
             }

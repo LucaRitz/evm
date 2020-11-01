@@ -13,7 +13,7 @@ namespace evm {
     public:
         IdealBandpassTemporalFilter(double lowerFreq, double upperFreq, int level = -1);
 
-        TemporalFiltered operator()(const SpatialFiltered& spatialFiltered, int fps);
+        TemporalFiltered operator()(const SpatialFiltered& spatialFiltered, double fps);
 
     private:
         double _lowerFreq;
@@ -28,6 +28,6 @@ namespace evm {
         Mat concat(int level, Mat& dest, int maxSize, const vector<shared_ptr<Pyramid>>& pyramids);
         static int bufferSize(int fps);
         static void insert(const Mat& value, int originalHeight, vector<shared_ptr<Pyramid>>& vec);
-        static Mat buildFilterOfFrequencyBand(Mat& filter, double lowerBound, double upperBound, int sampleRate);
+        static Mat buildFilterOfFrequencyBand(Mat& filter, double lowerBound, double upperBound, double sampleRate);
     };
 }

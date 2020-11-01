@@ -16,5 +16,9 @@ Mat evm::VideoCapture::frame() {
 
 int evm::VideoCapture::fps() {
     return _videoCapture.get(cv::CAP_PROP_FPS);
+}
 
+cv::Size evm::VideoCapture::size() {
+    return cv::Size{static_cast<int>(_videoCapture.get(cv::CAP_PROP_FRAME_WIDTH)),
+                    static_cast<int>(_videoCapture.get(cv::CAP_PROP_FRAME_HEIGHT))};
 }

@@ -7,7 +7,7 @@ evm::Processor::Processor(EvmPipeline& evmPipeline, Display& display) :
     _evmPipeline->setStoppedListener([this](bool waitUntilDone) { this->evmPipelineStopped(waitUntilDone); });
 }
 
-void evm::Processor::process(Mat& original, Roi& roi, int fps) {
+void evm::Processor::process(Mat& original, Roi& roi, double fps) {
     future<OutputData> result = _evmPipeline->calculate(InputData{vector<Mat>{original}, vector<Roi>{roi}, fps});
     _display->show(result);
 }

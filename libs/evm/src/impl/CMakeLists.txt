@@ -8,6 +8,7 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${EVM_INCLUDE_DIR}/impl/roi_position_reconstructor.hpp
         ${EVM_INCLUDE_DIR}/impl/roi_blur_filter.hpp
         ${EVM_INCLUDE_DIR}/impl/display_video.hpp
+        ${EVM_INCLUDE_DIR}/impl/display_video_orig.hpp
 
         PRIVATE
         webcam_capture.cpp
@@ -19,4 +20,5 @@ target_sources(${PROJECT_NAME} PUBLIC
         roi_fix_capture.cpp
         roi_blur_filter.cpp
         display_video.cpp
+        display_video_orig.cpp
         )
