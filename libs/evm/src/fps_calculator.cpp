@@ -1,9 +1,9 @@
 #include "../include/evm/fps_calculator.hpp"
 
-evm::FpsCalculator::FpsCalculator(int refreshAfter):
+evm::FpsCalculator::FpsCalculator(int refreshAfter, double start):
     _refreshAfter(refreshAfter),
     _sampleNumber(0),
-    _currentFps(30) {
+    _currentFps(start) {
 
 }
 

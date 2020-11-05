@@ -19,15 +19,15 @@
 #include <evm/filter/level_reconstructor.hpp>
 
 int main() {
-    evm::LaplaceSpatialFilter spatialFilter(4);
+    evm::LaplaceSpatialFilter spatialFilter(6);
     evm::IdealBandpassTemporalFilter temporalFilter(0.833, 1, 0);
     evm::Amplifier amplifier{std::vector<int>{100}};
     //evm::Reconstructor reconstructor;
     evm::LevelReconstructor reconstructor{0};
     evm::EvmPipeline evmPipeline(spatialFilter, temporalFilter, amplifier, reconstructor);
 
-    //evm::WebcamCapture videoCapture;
-    evm::VideoCapture videoCapture{"resources/mit_dude_orig.mp4"};
+    evm::WebcamCapture videoCapture;
+    //evm::VideoCapture videoCapture{"resources/mit_dude_orig.mp4"};
     //evm::RoiFaceCapture roiCapture;
     //evm::RoiFixCapture roiCapture(200, 100, 200, 200);
 
@@ -36,10 +36,10 @@ int main() {
 
     evm::RoiDefault roiCapture;
 
-    //evm::Display display(roiCapture.getReconstructor(), 30);
+    evm::Display display(roiCapture.getReconstructor());
     Size videoSize = videoCapture.size();
     //evm::DisplayVideo display(roiCapture.getReconstructor(), videoCapture.fps(), "output.avi", videoSize.width, videoSize.height);
-    evm::DisplayVideoOrig display(roiCapture.getReconstructor(), videoCapture.fps(), "output.avi", videoSize.width, videoSize.height, "resources/qt_dude.mp4");
+    //evm::DisplayVideoOrig display(roiCapture.getReconstructor(), videoCapture.fps(), "output.avi", videoSize.width, videoSize.height, "resources/qt_dude.mp4");
 
     evm::Processor processor(evmPipeline, display);
     evm::RoiBlurFilter roiBlurFilter{10, 10};

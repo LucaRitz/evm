@@ -32,6 +32,10 @@ evm::TemporalFiltered evm::IdealBandpassTemporalFilter::operator()(const Spatial
 
     for (int level = 0; level < spatialFiltered._levels; level++) {
 
+        if (_level != -1 && level != _level) {
+            continue;
+        }
+
         if (_filterMat.find(level) == _filterMat.end()) {
             _filterMat[level] = Mat{};
         }
@@ -41,10 +45,10 @@ evm::TemporalFiltered evm::IdealBandpassTemporalFilter::operator()(const Spatial
         int originalHeight = spatialFiltered._spatialFiltered.at(0)->at(level).size().height;
         concat(level, filterMat, optimalBufferSize, spatialFiltered._spatialFiltered);
 
-        if (_level != -1 && level != _level) {
+        /*if (_level != -1 && level != _level) {
             insert(filterMat, originalHeight, results);
             continue;
-        }
+        }*/
 
         Mat* channelsToFilter = new Mat[filterMat.channels()];
         cv::split(filterMat, channelsToFilter);

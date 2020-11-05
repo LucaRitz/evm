@@ -23,11 +23,11 @@ using std::mutex;
 namespace evm {
     class EXPORT Display {
     public:
-        Display(RoiReconstructor& roiReconstructor, int framesPerSec);
+        explicit Display(RoiReconstructor& roiReconstructor);
         virtual ~Display() = default;
 
         void show(future<OutputData>& frames);
-        virtual void display(const Mat& frame, int framesPerSec);
+        virtual void display(const Mat& frame, double framesPerSec, double calculationFps);
         void stop(bool waitUntilDone = false);
         void join();
         bool stopped();
@@ -42,6 +42,6 @@ namespace evm {
         thread _thread;
 
         void work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<bool>& stopped,
-                  queue<future<OutputData>>& queue, mutex& mut, int framesPerSec);
+                  queue<future<OutputData>>& queue, mutex& mut);
     };
 }

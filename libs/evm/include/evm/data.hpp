@@ -26,6 +26,7 @@ namespace evm {
     struct EXPORT OutputData {
         vector<Mat> _originals;
         vector<Roi> _processed_rois;
+        double _fps;
     };
 
     struct EXPORT InputData {

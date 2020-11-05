@@ -2,10 +2,12 @@
 #include <algorithm>
 
 evm::DisplayVideoOrig::DisplayVideoOrig(RoiReconstructor& roiReconstructor, int framesPerSec, const string& name, int width, int height, const string& orig) :
-    Display(roiReconstructor, framesPerSec),
+    Display(roiReconstructor),
     _capture(orig),
-    _writer(name, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, cv::Size(width + static_cast<int>(_capture.get(
-            cv::CAP_PROP_FRAME_WIDTH)), std::max(height, static_cast<int>(_capture.get(cv::CAP_PROP_FRAME_HEIGHT)))), true) {
+    _writer(name, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), framesPerSec,
+            cv::Size(width + static_cast<int>(_capture.get(
+                    cv::CAP_PROP_FRAME_WIDTH)),
+                     std::max(height, static_cast<int>(_capture.get(cv::CAP_PROP_FRAME_HEIGHT)))), true) {
 
 }
 
@@ -14,7 +16,7 @@ evm::DisplayVideoOrig::~DisplayVideoOrig() {
     _capture.release();
 }
 
-void evm::DisplayVideoOrig::display(const Mat& frame, int framesPerSec) {
+void evm::DisplayVideoOrig::display(const Mat& frame, double framesPerSec, double calculationFps) {
 
     Mat origFrame;
     _capture >> origFrame;

@@ -1,6 +1,7 @@
 #include "../include/evm/display.hpp"
+#include "../include/evm/fps_calculator.hpp"
 
-evm::Display::Display(RoiReconstructor& roiReconstructor, int framesPerSec) :
+evm::Display::Display(RoiReconstructor& roiReconstructor) :
         _running(true),
         _finishIfDone(false),
         _stopped(false),
@@ -9,7 +10,7 @@ evm::Display::Display(RoiReconstructor& roiReconstructor, int framesPerSec) :
         _mutex(),
         _roiReconstructor(roiReconstructor),
         _thread(&Display::work, this, std::ref(_running), std::ref(_finishIfDone), std::ref(_stopped), std::ref(_queue),
-                std::ref(_mutex), framesPerSec) {
+                std::ref(_mutex)) {
 }
 
 void evm::Display::show(future<OutputData>& frames) {
@@ -18,20 +19,25 @@ void evm::Display::show(future<OutputData>& frames) {
     _mutex.unlock();
 }
 
-void evm::Display::display(const Mat &frame, int framesPerSec) {
-    cv::imshow("Output 2", frame);
-    cv::waitKey(1000/framesPerSec + 1);
+void evm::Display::display(const Mat &frame, double framesPerSec, double calculationFps) {
+    cv::imshow("Output", frame);
+    double calcDelay = calculationFps > 0 ? 1000/calculationFps : 0;
+    int delay = std::max(1.0, std::floor(1000/framesPerSec - calcDelay));
+    cv::waitKey(delay);
     //cv::waitKey(0);
 }
 
 void
 evm::Display::work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<bool>& stopped,
-                   queue<future<evm::OutputData>>& queue, mutex& mut, int framesPerSec) {
+                   queue<future<evm::OutputData>>& queue, mutex& mut) {
+    FpsCalculator fpsCalculator{32, 0};
     while (running) {
+        fpsCalculator.startMeasurement();
         mut.lock();
         if (!queue.empty()) {
             auto data = std::move(queue.front());
             queue.pop();
+            std::cout << "QUEUE: " << queue.size() << std::endl;
             mut.unlock();
             data.wait();
             auto output = data.get();
@@ -42,7 +48,11 @@ evm::Display::work(atomic<bool>& running, atomic<bool>& finishIfDone, atomic<boo
                 double min, max;
                 minMaxLoc(frame, &min, &max);
                 frame.convertTo(converted, CV_8UC3, 255.0 / (max - min), -min * 255.0 / (max - min));
-                display(converted, framesPerSec);
+
+                fpsCalculator.incSample();
+                fpsCalculator.stopMeasurement();
+                display(converted, output._fps, fpsCalculator.fps() + 0.1);
+                fpsCalculator.startMeasurement();
             }
             continue;
         } else if (finishIfDone) {

@@ -11,7 +11,7 @@ namespace evm {
         DisplayVideoOrig(RoiReconstructor& roiReconstructor, int framesPerSec, const string& name, int width, int height, const string& original);
         ~DisplayVideoOrig();
 
-        virtual void display(const Mat& frame, int framesPerSec) override;
+        virtual void display(const Mat& frame, double framesPerSec, double calculationFps) override;
 
     private:
         cv::VideoCapture _capture;
